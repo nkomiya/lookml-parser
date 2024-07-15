@@ -24,6 +24,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 11
+          distribution: microsoft
 
       - name: configure yarn
         run: yarn install
