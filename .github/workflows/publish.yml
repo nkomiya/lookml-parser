@@ -1,0 +1,63 @@
+name: "publish"
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+          distribution: microsoft
+
+      - name: Setup antlr4
+        run: pip install -U pip antlr4-tools
+
+      - name: Set version
+        id: set_version
+        run: echo version=v$(jq -r .version package.json) >> "${GITHUB_OUTPUT}"
+
+      - name: Check version not released
+        run: |-
+          if git tag | grep -q '${{ steps.set_version.outputs.version }}'; then
+            echo "Version ${{ steps.set_version.outputs.version }} already released"
+            exit 1
+          fi
+
+      - name: Configure yarn
+        run: yarn install
+
+      - name: Build js files
+        run: yarn build
+
+      - name: Prepare for commit to dist branch
+        run: |-
+          mv dist publish
+          cp package.json publish
+
+      - name: publish
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish
+          publish_branch: dist
+          tag_name: ${{ steps.set_version.outputs.version }}
+          tag_message: "Release ${{ steps.set_version.outputs.version }}"
+          # avoid .nojekyll file to be generated
+          enable_jekyll: true
