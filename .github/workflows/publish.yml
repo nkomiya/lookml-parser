@@ -36,24 +36,27 @@ jobs:
         name: Set version
         run: echo version=v$(jq -r .version package.json) >> "${GITHUB_OUTPUT}"
 
-      - name: Configure yarn
-        run: yarn install
+      - name: test
+        run: git tag
 
-      - name: Build js files
-        run: yarn build
+      # - name: Configure yarn
+      #   run: yarn install
 
-      - name: Prepare for commit to dist branch
-        run: |-
-          mv dist publish
-          cp package.json publish
+      # - name: Build js files
+      #   run: yarn build
 
-      - name: publish
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./publish
-          publish_branch: dist
-          tag_name: ${{ steps.set_version.outputs.version }}
-          tag_message: "Release ${{ steps.set_version.outputs.version }}"
-          # avoid .nojekyll file to be generated
-          enable_jekyll: true
+      # - name: Prepare for commit to dist branch
+      #   run: |-
+      #     mv dist publish
+      #     cp package.json publish
+
+      # - name: publish
+      #   uses: peaceiris/actions-gh-pages@v4
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     publish_dir: ./publish
+      #     publish_branch: dist
+      #     tag_name: ${{ steps.set_version.outputs.version }}
+      #     tag_message: "Release ${{ steps.set_version.outputs.version }}"
+      #     # avoid .nojekyll file to be generated
+      #     enable_jekyll: true
