@@ -50,5 +50,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./publish
           publish_branch: dist
-          tag_name: ${{ publish.outputs.version }}
+          tag_name: ${{ steps.set_version.outputs.version }}
           tag_message: "Release ${{ steps.set_version.outputs.version }}"
