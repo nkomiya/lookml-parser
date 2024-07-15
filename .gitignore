@@ -1,0 +1,10 @@
+# python
+env
+
+# javascript
+node_modules
+yarn-error.log
+dist
+
+# antlr
+src/generated

@@ -1,0 +1,19 @@
+{
+  "name": "lookml-parser",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "types": "dist/index.d.js",
+  "scripts": {
+    "prebuild": "bash utils/pre-build.sh",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "antlr4": "^4.13.1-patch-1"
+  },
+  "devDependencies": {
+    "@types/antlr4": "^4.11.6",
+    "@types/node": "^20.14.10",
+    "typescript": "^5.5.3"
+  },
+  "license": "MIT"
+}
