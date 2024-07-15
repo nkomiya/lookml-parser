@@ -37,7 +37,11 @@ jobs:
         run: echo version=v$(jq -r .version package.json) >> "${GITHUB_OUTPUT}"
 
       - name: test
-        run: git tag
+        run: |-
+          if git tag | grep -q '${{ steps.set_version.outputs.version }}'; then
+            echo "Version ${{ steps.set_version.outputs.version }} already released"
+            exit 1
+          fi
 
       # - name: Configure yarn
       #   run: yarn install
