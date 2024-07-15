@@ -15,5 +15,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "configure yarn"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 11
+
+      - name: configure yarn
         run: yarn install
+
+      - name: install antlr4
+        run: pip install -U pip antlr4-tools
+
+      - name: test
+        run: antlr4 || echo ""
