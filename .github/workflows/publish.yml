@@ -34,3 +34,10 @@ jobs:
 
       - name: Build js files
         run: yarn build
+
+      - name: Prepare for commit to dist branch
+        run: |-
+          ls -1 | grep -E '^(dist|package.json)$' | xargs rm -r
+          cp -r dist .
+          rm -r dist
+          ls
