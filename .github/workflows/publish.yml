@@ -1,10 +1,10 @@
 name: "publish"
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - chore/build
+  workflow_dispatch: {}
 
 jobs:
   publish:
@@ -26,11 +26,11 @@ jobs:
           java-version: 11
           distribution: microsoft
 
-      - name: configure yarn
-        run: yarn install
-
-      - name: install antlr4
+      - name: Setup antlr4
         run: pip install -U pip antlr4-tools
 
-      - name: test
-        run: antlr4 || echo ""
+      - name: Configure yarn
+        run: yarn install
+
+      - name: Build js files
+        run: yarn build
