@@ -6,11 +6,12 @@ on:
       - chore/build
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      packages: write
 
     steps:
       - uses: actions/checkout@v3
