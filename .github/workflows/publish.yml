@@ -1,9 +1,6 @@
 name: "publish"
 
 on:
-  push:
-    branches:
-      - chore/build
   workflow_dispatch: {}
 
 permissions:
@@ -32,35 +29,35 @@ jobs:
       - name: Setup antlr4
         run: pip install -U pip antlr4-tools
 
-      - id: set_version
-        name: Set version
+      - name: Set version
+        id: set_version
         run: echo version=v$(jq -r .version package.json) >> "${GITHUB_OUTPUT}"
 
-      - name: test
+      - name: Check version not released
         run: |-
           if git tag | grep -q '${{ steps.set_version.outputs.version }}'; then
             echo "Version ${{ steps.set_version.outputs.version }} already released"
             exit 1
           fi
 
-      # - name: Configure yarn
-      #   run: yarn install
+      - name: Configure yarn
+        run: yarn install
 
-      # - name: Build js files
-      #   run: yarn build
+      - name: Build js files
+        run: yarn build
 
-      # - name: Prepare for commit to dist branch
-      #   run: |-
-      #     mv dist publish
-      #     cp package.json publish
+      - name: Prepare for commit to dist branch
+        run: |-
+          mv dist publish
+          cp package.json publish
 
-      # - name: publish
-      #   uses: peaceiris/actions-gh-pages@v4
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     publish_dir: ./publish
-      #     publish_branch: dist
-      #     tag_name: ${{ steps.set_version.outputs.version }}
-      #     tag_message: "Release ${{ steps.set_version.outputs.version }}"
-      #     # avoid .nojekyll file to be generated
-      #     enable_jekyll: true
+      - name: publish
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./publish
+          publish_branch: dist
+          tag_name: ${{ steps.set_version.outputs.version }}
+          tag_message: "Release ${{ steps.set_version.outputs.version }}"
+          # avoid .nojekyll file to be generated
+          enable_jekyll: true
