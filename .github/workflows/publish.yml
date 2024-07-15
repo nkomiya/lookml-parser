@@ -9,8 +9,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.set_version.outputs.version }}
 
     steps:
       - uses: actions/checkout@v3
@@ -53,4 +51,4 @@ jobs:
           publish_dir: ./publish
           publish_branch: dist
           tag_name: ${{ publish.outputs.version }}
-          tag_message: "Release ${{ publish.outputs.version }}"
+          tag_message: "Release ${{ steps.set_version.outputs.version }}"
